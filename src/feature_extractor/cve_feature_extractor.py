@@ -22,13 +22,13 @@ class Cve_Feature_Extractor:
       if os.path.exists(consts.csv_url):
          os.remove(consts.csv_url)
       
-      with open(consts.csv_url, 'a+') as csv_file:
+      with open(consts.csv_url, 'a+',encoding="utf8") as csv_file:
          csv_file.write(','.join(consts.features_cols) + "\n")
 
       for year in range(2013,2023):
          feature_vectors = self.extract_features(year)
 
-         with open(consts.csv_url, 'a+') as csv_file:
+         with open(consts.csv_url, 'a+',encoding="utf8") as csv_file:
             
             for vector in feature_vectors:
                csv_file.write(vector.getCsvLine() + "\n")
@@ -48,7 +48,7 @@ class Cve_Feature_Extractor:
       when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
       # list of exploited CVEs
-      with open(consts.exploited_cves_path, 'r') as jsonfile:
+      with open(consts.exploited_cves_path, 'r',encoding="utf8") as jsonfile:
          exploited_cves = json.load(jsonfile)
       
       exploited_cves_ids = []
@@ -61,7 +61,7 @@ class Cve_Feature_Extractor:
       # import json
       cve_path = consts.path_nvd + consts.json_beginning + str(year) + consts.json_end
 
-      with open(cve_path, 'r') as jsonfile:
+      with open(cve_path, 'r',encoding="utf8") as jsonfile:
          cve_list = json.load(jsonfile)
 
       cves = cve_list['CVE_Items']
