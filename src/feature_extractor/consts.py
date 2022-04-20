@@ -6,7 +6,7 @@ json_end = '.json'
 # columns for the cve feature vector
 features_cols = ['cve_id', 'cvss', 'cwe_value', 'vul_conf_count', 'vul_products', 'days_diff', 'ref_count', 'clean_summary', 'unsupported_when_assigned', 'class_exploited', 'proof_of_concept']
 
-exploited_cves_path = path_nvd + "known_exploited_vulnerabilities.json"
+exploited_cves_path = 'C:\\Users\\hedio\\Documents\\Stage\\data\\known_exploited_vulnerabilities.json'
 
 csv_url = path_featureExtractor + "cve_feature_vectors.csv"
 
