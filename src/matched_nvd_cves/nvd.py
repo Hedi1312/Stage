@@ -550,7 +550,7 @@ class NvdCve(object):
 
         # Process cve files for last "n" years
 
-        for index in range(13):
+        for index in range(gbls.num_nvd_files):
             yr_processed = my_yr - index
 
             # get the meta file for the year being processed

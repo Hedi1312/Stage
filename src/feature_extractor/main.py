@@ -17,7 +17,12 @@ from src.matched_nvd_cves.nvd import NvdCve
 
 def main():
 
-    download_cves_json()
+    msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
+
+    if "y" or "Y" in msg:
+        download_cves_json()
+
+
 
     # extract vector features from json files and write them into a csv file
     CveFeatureExtractor = Cve_Feature_Extractor()

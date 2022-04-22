@@ -50,6 +50,6 @@ cpe_max_age = 7
 cve_filename = 'nvdcve-1.1-'
 
 #   Number of years of NVD CVD XML feed files
-num_nvd_files = 10
+num_nvd_files = 13
 
 nvd_meta_filename = 'cve_meta_'
