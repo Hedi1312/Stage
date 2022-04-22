@@ -7,7 +7,7 @@ import consts
 import csv
 
 filename = r'cve_feature_vectors.csv'
-
+nbrOccurence = r'nombres_occurences.csv'
 
 
 p = os.path.abspath('../matched_nvd_cves')
@@ -49,7 +49,7 @@ def occurrences():
                 continue
 
     # ouverture en écriture (w, première lettre de write) d'un fichier
-    with open('nombres_occurences.csv', 'w', newline='') as fichier:
+    with open(nbrOccurence, 'w', newline='') as fichier:
 
         # on déclare un objet writer
         ecrivain = csv.writer(fichier)
@@ -61,7 +61,21 @@ def occurrences():
         for d in data:
             ecrivain.writerow([d, str(data.count(d))])
 
+    # défini une liste vide pour stocker les lignes uniques
+    ls = []
 
+    # ouvrir le fichier en lecture seule
+    with open(nbrOccurence, 'r') as file:
+        # lire le fichier ligne par ligne
+        for line in file:
+            # copier la ligne dans la liste si elle n'y est pas déjà
+            if line not in ls:
+                ls.append(line)
+
+    # réouvrir le fichier mais en mode écriture (ce qui effacera le contenu existant) et écrire les lignes de la liste
+    with open(nbrOccurence, 'w') as file:
+        for line in ls:
+            file.write(line)
 
 if __name__ == "__main__":
     main()
