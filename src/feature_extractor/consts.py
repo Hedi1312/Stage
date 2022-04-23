@@ -4,7 +4,7 @@ json_beginning = 'nvdcve-1.1-'
 json_end = '.json'
 
 # columns for the cve feature vector
-features_cols = ['cve_id', 'cvss', 'cwe_value', 'vul_conf_count', 'vul_products', 'days_diff', 'ref_count', 'clean_summary', 'unsupported_when_assigned', 'class_exploited', 'proof_of_concept']
+features_cols = ['cve_id', 'vendor_name', 'cwe_value', 'description']
 
 exploited_cves_path = path_nvd+"known_exploited_vulnerabilities.json"
 
