@@ -19,7 +19,7 @@ def main():
 
     msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
 
-    if "y" or "Y" in msg:
+    if "y" in msg or "Y" in msg:
         download_cves_json()
 
 

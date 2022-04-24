@@ -70,6 +70,7 @@ class Cve_Feature_Extractor:
 
          #cve id
          cve_id = cve['cve']['CVE_data_meta']['ID']
+         vendor_name = cve['cve']['CVE_data_meta']['ASSIGNER']
 
          # check if cvss score exists
          if (len(cve['impact'])>0):
@@ -90,47 +91,10 @@ class Cve_Feature_Extractor:
          if cwe_value == "NVD-CWE-noinfo":
             continue
 
-         # references
-         reference_data = cve['cve']['references']['reference_data']
-
-         # count references
-         ref_count = len(reference_data)
-
-         # proof of concept ?
-         poc = 0
-
-         if (ref_count>0):
-            for ref in reference_data:
-               if "tags" in ref.keys():
-                  if "Exploit" in ref['tags']:
-                     poc = 1
-                     break
-
-         # vulnerable configurations and products
-         nodes = cve['configurations']['nodes']
-         vuln_configs = 0
-         products = set()
-      
-         for node in nodes:
-            cpe_match = node['cpe_match']
-
-            for config in cpe_match:
-                  vuln_configs += 1
-
-                  cpe23Uri = config['cpe23Uri']
-                  products.add(cpe23Uri.split(':')[3])
-         
-         vuln_products = len(products)
-
-         publishedDate = datetime.datetime.strptime(cve['publishedDate'][:10], "%Y-%m-%d")
-         lastModifiedDate = datetime.datetime.strptime(cve['lastModifiedDate'][:10], "%Y-%m-%d")
-
-         days_diff = (lastModifiedDate.date() - publishedDate.date()).days
 
          # summary
          summary = cve['cve']['description']['description_data'][0]['value']
 
-         unsupported_when_assigned = 0
 
          if summary.startswith('**'):
             special_message = summary.split('**')[1].strip()
@@ -142,26 +106,13 @@ class Cve_Feature_Extractor:
          
          clean_summary = self.get_clean_summary(summary)
 
-         # exploited or not?
-
-         class_exploited=0
-
-         if cve_id in exploited_cves_ids:
-            class_exploited=1
 
          # preparing the features vector
 
-         cve_dict = {'cve_id':cve_id, 
-                     'cvss':cvss, 
-                     'cwe_value':cwe_value,
-                     'vul_conf_count':vuln_configs, 
-                     'vul_products':vuln_products, 
-                     'days_diff':days_diff, 
-                     'ref_count':ref_count, 
-                     'clean_summary':clean_summary,
-                     'unsupported_when_assigned':unsupported_when_assigned,
-                     'class_exploited':class_exploited,
-                     'proof_of_concept':poc
+         cve_dict = {'cve_id': cve_id,
+                     'vendor_name': vendor_name,
+                     'cwe_value': cwe_value,
+                     'description': clean_summary
                      }
          
          features_vectors.append(Cve_Feature_Vector(cve_dict))
