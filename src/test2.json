@@ -1,0 +1,308 @@
+{
+  "CVE_Items": [
+    {
+    "cve" : {
+      "data_type" : "CVE",
+      "data_format" : "MITRE",
+      "data_version" : "4.0",
+      "CVE_data_meta" : {
+        "ID" : "CVE-2010-0017",
+        "ASSIGNER" : "secure@microsoft.com"
+      },
+      "problemtype" : {
+        "problemtype_data" : [ {
+          "description" : [ {
+            "lang" : "en",
+            "value" : "CWE-362"
+          } ]
+        } ]
+      },
+      "references" : {
+        "reference_data" : [ {
+          "url" : "http://www.us-cert.gov/cas/techalerts/TA10-040A.html",
+          "name" : "TA10-040A",
+          "refsource" : "CERT",
+          "tags" : [ "US Government Resource" ]
+        }, {
+          "url" : "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A8298",
+          "name" : "oval:org.mitre.oval:def:8298",
+          "refsource" : "OVAL",
+          "tags" : [ ]
+        }, {
+          "url" : "https://docs.microsoft.com/en-us/security-updates/securitybulletins/2010/ms10-006",
+          "name" : "MS10-006",
+          "refsource" : "MS",
+          "tags" : [ ]
+        } ]
+      },
+      "description" : {
+        "description_data" : [ {
+          "lang" : "en",
+          "value" : "Race condition in the SMB client implementation in Microsoft Windows Server 2008 R2 and Windows 7 allows remote SMB servers and man-in-the-middle attackers to execute arbitrary code, and in the SMB client implementation in Windows Vista Gold, SP1, and SP2 and Server 2008 Gold and SP2 allows local users to gain privileges, via a crafted SMB Negotiate response, aka \"SMB Client Race Condition Vulnerability.\""
+        } ]
+      }
+    },
+    "configurations" : {
+      "CVE_data_version" : "4.0",
+      "nodes" : [ {
+        "operator" : "OR",
+        "children" : [ ],
+        "cpe_match" : [ {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_server_2008:*:*:itanium:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_server_2008:-:sp2:itanium:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_vista:-:-:x64:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_7:-:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_vista:*:sp1:x64:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_vista:*:sp2:x64:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_server_2008:r2:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_server_2008:*:*:x32:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_vista:*:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_server_2008:*:*:x64:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:o:microsoft:windows_server_2008:-:sp2:x64:*:*:*:*:*",
+          "cpe_name" : [ ]
+        } ]
+      } ]
+    },
+    "impact" : {
+      "baseMetricV2" : {
+        "cvssV2" : {
+          "version" : "2.0",
+          "vectorString" : "AV:N/AC:M/Au:N/C:C/I:C/A:C",
+          "accessVector" : "NETWORK",
+          "accessComplexity" : "MEDIUM",
+          "authentication" : "NONE",
+          "confidentialityImpact" : "COMPLETE",
+          "integrityImpact" : "COMPLETE",
+          "availabilityImpact" : "COMPLETE",
+          "baseScore" : 9.3
+        },
+        "severity" : "HIGH",
+        "exploitabilityScore" : 8.6,
+        "impactScore" : 10.0,
+        "obtainAllPrivilege" : true,
+        "obtainUserPrivilege" : false,
+        "obtainOtherPrivilege" : false,
+        "userInteractionRequired" : false
+      }
+    },
+    "publishedDate" : "2010-02-10T18:30Z",
+    "lastModifiedDate" : "2018-10-30T16:28Z"
+  }, {
+    "cve" : {
+      "data_type" : "CVE",
+      "data_format" : "MITRE",
+      "data_version" : "4.0",
+      "CVE_data_meta" : {
+        "ID" : "CVE-2010-0018",
+        "ASSIGNER" : "secure@microsoft.com"
+      },
+      "problemtype" : {
+        "problemtype_data" : [ {
+          "description" : [ {
+            "lang" : "en",
+            "value" : "CWE-189"
+          } ]
+        } ]
+      },
+      "references" : {
+        "reference_data" : [ {
+          "url" : "http://blogs.technet.com/srd/archive/2010/01/12/ms10-001-font-file-decompression-vulnerability.aspx",
+          "name" : "http://blogs.technet.com/srd/archive/2010/01/12/ms10-001-font-file-decompression-vulnerability.aspx",
+          "refsource" : "MISC",
+          "tags" : [ ]
+        }]
+      },
+      "description" : {
+        "description_data" : [ {
+          "lang" : "en",
+          "value" : "Integer overflow in the Embedded OpenType (EOT) Font Engine (t2embed.dll) in Microsoft Windows 2000 SP4; Windows XP SP2 and SP3; Windows Server 2003 SP2; Windows Vista Gold, SP1, and SP2; Windows Server 2008 Gold, SP2, and R2; and Windows 7 allows remote attackers to execute arbitrary code via compressed data that represents a crafted EOT font, aka \"Microtype Express Compressed Fonts Integer Flaw in the LZCOMP Decompressor Vulnerability.\""
+        } ]
+      }
+    },
+    "configurations" : {
+      "CVE_data_version" : "4.0",
+      "nodes" : []
+    },
+    "impact" : {
+      "baseMetricV2" : {
+        "cvssV2" : {
+          "version" : "2.0",
+          "vectorString" : "AV:N/AC:M/Au:N/C:C/I:C/A:C",
+          "accessVector" : "NETWORK",
+          "accessComplexity" : "MEDIUM",
+          "authentication" : "NONE",
+          "confidentialityImpact" : "COMPLETE",
+          "integrityImpact" : "COMPLETE",
+          "availabilityImpact" : "COMPLETE",
+          "baseScore" : 9.3
+        },
+        "severity" : "HIGH",
+        "exploitabilityScore" : 8.6,
+        "impactScore" : 10.0,
+        "obtainAllPrivilege" : true,
+        "obtainUserPrivilege" : false,
+        "obtainOtherPrivilege" : false,
+        "userInteractionRequired" : true
+      }
+    },
+    "publishedDate" : "2010-01-13T19:30Z",
+    "lastModifiedDate" : "2018-10-30T16:27Z"
+  }, {
+    "cve" : {
+      "data_type" : "CVE",
+      "data_format" : "MITRE",
+      "data_version" : "4.0",
+      "CVE_data_meta" : {
+        "ID" : "CVE-2010-0019",
+        "ASSIGNER" : "secure@microsoft.com"
+      },
+      "problemtype" : {
+        "problemtype_data" : [ {
+          "description" : [ {
+            "lang" : "en",
+            "value" : "CWE-94"
+          } ]
+        } ]
+      },
+      "references" : {
+        "reference_data" : [ {
+          "url" : "http://www.us-cert.gov/cas/techalerts/TA10-222A.html",
+          "name" : "TA10-222A",
+          "refsource" : "CERT",
+          "tags" : [ "US Government Resource" ]
+        }, {
+          "url" : "https://docs.microsoft.com/en-us/security-updates/securitybulletins/2010/ms10-060",
+          "name" : "MS10-060",
+          "refsource" : "MS",
+          "tags" : [ ]
+        } ]
+      },
+      "description" : {
+        "description_data" : [ {
+          "lang" : "en",
+          "value" : "Microsoft Silverlight 3 before 3.0.50611.0 on Windows, and before 3.0.41130.0 on Mac OS X, does not properly handle pointers, which allows remote attackers to execute arbitrary code or cause a denial of service (memory corruption and framework outage) via a crafted web site, aka \"Microsoft Silverlight Memory Corruption Vulnerability.\""
+        } ]
+      }
+    },
+    "configurations" : {
+      "CVE_data_version" : "4.0",
+      "nodes" : [ {
+        "operator" : "AND",
+        "children" : [ {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:microsoft:silverlight:*:*:*:*:*:*:*:*",
+            "versionEndIncluding" : "3.0.40818.0",
+            "cpe_name" : [ ]
+          }, {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:microsoft:silverlight:3.0.40723.0:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          }, {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:microsoft:silverlight:3.0.40624.00:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          } ]
+        }, {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : false,
+            "cpe23Uri" : "cpe:2.3:o:apple:mac_os_x:*:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          } ]
+        } ]
+      }, {
+        "operator" : "AND",
+        "children" : [ {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:microsoft:silverlight:3.0.40624.00:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          }, {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:microsoft:silverlight:3.0.40723.0:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          }, {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:microsoft:silverlight:3.0.40818.0:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          }, {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:microsoft:silverlight:*:*:*:*:*:*:*:*",
+            "versionEndIncluding" : "3.0.50106.0",
+            "cpe_name" : [ ]
+          } ]
+        }, {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : false,
+            "cpe23Uri" : "cpe:2.3:o:microsoft:windows:*:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          } ]
+        } ]
+      } ]
+    },
+    "impact" : {
+      "baseMetricV2" : {
+        "cvssV2" : {
+          "version" : "2.0",
+          "vectorString" : "AV:N/AC:M/Au:N/C:C/I:C/A:C",
+          "accessVector" : "NETWORK",
+          "accessComplexity" : "MEDIUM",
+          "authentication" : "NONE",
+          "confidentialityImpact" : "COMPLETE",
+          "integrityImpact" : "COMPLETE",
+          "availabilityImpact" : "COMPLETE",
+          "baseScore" : 9.3
+        },
+        "severity" : "HIGH",
+        "exploitabilityScore" : 8.6,
+        "impactScore" : 10.0,
+        "obtainAllPrivilege" : true,
+        "obtainUserPrivilege" : false,
+        "obtainOtherPrivilege" : false,
+        "userInteractionRequired" : true
+      }
+    },
+    "publishedDate" : "2010-08-11T18:47Z",
+    "lastModifiedDate" : "2018-10-12T21:56Z"
+  }
+  ]
+ }

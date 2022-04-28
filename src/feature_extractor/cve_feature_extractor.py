@@ -36,9 +36,6 @@ class Cve_Feature_Extractor:
       return None
 
 
-         
-
-
 
    def extract_features(self, year):
 
@@ -70,7 +67,21 @@ class Cve_Feature_Extractor:
 
          #cve id
          cve_id = cve['cve']['CVE_data_meta']['ID']
-         vendor_name = cve['cve']['CVE_data_meta']['ASSIGNER']
+
+         # vendor name
+         vendor_name = "test"
+         # try:
+         #    cve['configurations']['nodes'][0]
+         #    try:
+         #       vendor_name = cve['configurations']['nodes'][0]['cpe_match'][0]['cpe23Uri'] + "\n"
+         #    except:
+         #       vendor_name = cve['configurations']['nodes'][0]['children'][0]['cpe_match'][0]['cpe23Uri'] + "\n"
+         # except:
+         #    continue
+
+         # print(cve_id)
+         # print(vendor_name)
+
 
          # check if cvss score exists
          if (len(cve['impact'])>0):
