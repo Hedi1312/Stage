@@ -12,6 +12,24 @@ cves = cve_list['CVE_Items']
 for cve in cves:
     id = cve['cve']['CVE_data_meta']['ID']
 
+    # vendor name
+    nodes = cve['configurations']['nodes']
+    vuln_configs = 0
+    vendor_tab = []
+
+
+    for node in nodes:
+        cpe_match = node['cpe_match']
+
+        for config in cpe_match:
+
+            cpe23Uri = config['cpe23Uri']
+            if cpe23Uri.split(':')[3] not in vendor_tab:
+                cpe = cpe23Uri.split(':')[3]
+                vendor_tab.append(cpe.replace(",", ""))
+
+            vendor_name = ":".join(vendor_tab)
+
 
     # try:
     #     cve['configurations']['nodes'][0]

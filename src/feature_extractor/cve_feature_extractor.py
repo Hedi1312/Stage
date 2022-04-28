@@ -41,6 +41,7 @@ class Cve_Feature_Extractor:
 
       # returns the features vectors for all CVEs of a specific year
 
+      global vendor_name
       to_ignore = ('REJECT', 'DISPUTED', 'Resolved')
       when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
@@ -69,7 +70,22 @@ class Cve_Feature_Extractor:
          cve_id = cve['cve']['CVE_data_meta']['ID']
 
          # vendor name
-         vendor_name = "test"
+         nodes = cve['configurations']['nodes']
+         vendor_tab = []
+
+
+         for node in nodes:
+            cpe_match = node['cpe_match']
+
+            for config in cpe_match:
+
+               cpe23Uri = config['cpe23Uri']
+               if cpe23Uri.split(':')[3] not in vendor_tab:
+                  cpe = cpe23Uri.split(':')[3]
+                  vendor_tab.append(cpe.replace(",",""))
+
+               vendor_name = ":".join(vendor_tab)
+
          # try:
          #    cve['configurations']['nodes'][0]
          #    try:
