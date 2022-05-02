@@ -17,10 +17,10 @@ from src.matched_nvd_cves.nvd import NvdCve
 
 def main():
 
-    # msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
-    #
-    # if "y" in msg or "Y" in msg:
-    #     download_cves_json()
+    msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
+
+    if "y" in msg or "Y" in msg:
+        download_cves_json()
 
 
 
@@ -48,8 +48,8 @@ def occurrences():
         csvreader = csv.reader(csvfile, delimiter=',')
         for row in csvreader:
             try:
-                if len(row[2]) > 0 and "cwe_value" not in row:
-                    data.append(row[2])
+                if len(row[3]) > 0 and "cwe_value" not in row:
+                    data.append(row[3])
             except:
                 continue
 

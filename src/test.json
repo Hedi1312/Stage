@@ -1,132 +1,378 @@
 {
   "CVE_Items": [
     {
-      "cve": {
-        "data_type": "CVE",
-        "data_format": "MITRE",
-        "data_version": "4.0",
-        "CVE_data_meta": {
-          "ID": "CVE-2010-001",
-          "ASSIGNER": "cve@mitre.org"
-        },
-        "problemtype": {
-          "problemtype_data": [
-            {
-              "description": [
-                {
-                  "lang": "en",
-                  "value": "CWE-119"
-                }
-              ]
-            }
-          ]
-        },
-        "references": {
-          "reference_data": [
-            {
-              "url": "https://github.com/perl5-dbi/dbi/commit/a8b98e988d6ea2946f5f56691d6d5ead53f65766",
-              "name": "https://github.com/perl5-dbi/dbi/commit/a8b98e988d6ea2946f5f56691d6d5ead53f65766",
-              "refsource": "MISC",
-              "tags": [
-                "Patch",
-                "Third Party Advisory"
-              ]
-            },
-            {
-              "url": "https://metacpan.org/pod/distribution/DBI/Changes#Changes-in-DBI-1.632-9th-Nov-2014",
-              "name": "https://metacpan.org/pod/distribution/DBI/Changes#Changes-in-DBI-1.632-9th-Nov-2014",
-              "refsource": "MISC",
-              "tags": [
-                "Release Notes",
-                "Third Party Advisory"
-              ]
-            },
-            {
-              "url": "https://rt.cpan.org/Public/Bug/Display.html?id=86744#txn-1880941",
-              "name": "https://rt.cpan.org/Public/Bug/Display.html?id=86744#txn-1880941",
-              "refsource": "MISC",
-              "tags": [
-                "Third Party Advisory"
-              ]
-            },
-            {
-              "url": "https://usn.ubuntu.com/4509-1/",
-              "name": "USN-4509-1",
-              "refsource": "UBUNTU",
-              "tags": []
-            }
-          ]
-        },
-        "description": {
-          "description_data": [
-            {
-              "lang": "en",
-              "value": "An issue was discovered in the DBI module before 1.632 for Perl. Using many arguments to methods for Callbacks may lead to memory corruption."
-            }
-          ]
-        }
+    "cve" : {
+      "data_type" : "CVE",
+      "data_format" : "MITRE",
+      "data_version" : "4.0",
+      "CVE_data_meta" : {
+        "ID" : "CVE-2010-0126",
+        "ASSIGNER" : "PSIRT-CNA@flexerasoftware.com"
       },
-      "configurations": {
-        "CVE_data_version": "4.0",
-        "nodes": [
-          {
-            "operator": "OR",
-            "children": [],
-            "cpe_match": [
-              {
-                "vulnerable": true,
-                "cpe23Uri": "cpe:2.3:a:perl:dbi:*:*:*:*:*:*:*:*",
-                "versionEndExcluding": "1.632",
-                "cpe_name": []
-              }
-            ]
-          }
-        ]
+      "problemtype" : {
+        "problemtype_data" : [ {
+          "description" : [ {
+            "lang" : "en",
+            "value" : "CWE-119"
+          } ]
+        } ]
       },
-      "impact": {
-        "baseMetricV3": {
-          "cvssV3": {
-            "version": "3.1",
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
-            "attackVector": "NETWORK",
-            "attackComplexity": "LOW",
-            "privilegesRequired": "NONE",
-            "userInteraction": "NONE",
-            "scope": "UNCHANGED",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "availabilityImpact": "LOW",
-            "baseScore": 5.3,
-            "baseSeverity": "MEDIUM"
+      "references" : {
+        "reference_data" : [ {
+          "url" : "http://www.securityfocus.com/bid/41928",
+          "name" : "41928",
+          "refsource" : "BID",
+          "tags" : [ ]
+        }, {
+          "url" : "http://secunia.com/secunia_research/2010-16/",
+          "name" : "http://secunia.com/secunia_research/2010-16/",
+          "refsource" : "MISC",
+          "tags" : [ "Vendor Advisory" ]
+        }, {
+          "url" : "http://www-01.ibm.com/support/docview.wss?uid=swg21440812",
+          "name" : "http://www-01.ibm.com/support/docview.wss?uid=swg21440812",
+          "refsource" : "CONFIRM",
+          "tags" : [ ]
+        }, {
+          "url" : "http://www.symantec.com/security_response/securityupdates/detail.jsp?fid=security_advisory&pvid=security_advisory&year=2010&suid=20100727_01",
+          "name" : "http://www.symantec.com/security_response/securityupdates/detail.jsp?fid=security_advisory&pvid=security_advisory&year=2010&suid=20100727_01",
+          "refsource" : "CONFIRM",
+          "tags" : [ ]
+        } ]
+      },
+      "description" : {
+        "description_data" : [ {
+          "lang" : "en",
+          "value" : "Heap-based buffer overflow in an unspecified library in Autonomy KeyView 10.4 and 10.9, as used in multiple IBM, Symantec, and other products, allows remote attackers to execute arbitrary code via a crafted compound file, as demonstrated using a Quattro Pro file, which is not properly handled by the Quattro speed reader (qpssr.dll)."
+        } ]
+      }
+    },
+    "configurations" : {
+      "CVE_data_version" : "4.0",
+      "nodes" : [ {
+        "operator" : "OR",
+        "children" : [ ],
+        "cpe_match" : [ {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:a:autonomy:keyview_export_sdk:10.9:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:a:autonomy:keyview_filter_sdk:10.4:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:a:autonomy:keyview_export_sdk:10.4:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:a:autonomy:keyview_viewer_sdk:10.9:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:a:autonomy:keyview_filter_sdk:10.9:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        }, {
+          "vulnerable" : true,
+          "cpe23Uri" : "cpe:2.3:a:autonomy:keyview_viewer_sdk:10.4:*:*:*:*:*:*:*",
+          "cpe_name" : [ ]
+        } ]
+      } ]
+    },
+    "impact" : {
+      "baseMetricV2" : {
+        "cvssV2" : {
+          "version" : "2.0",
+          "vectorString" : "AV:N/AC:M/Au:N/C:C/I:C/A:C",
+          "accessVector" : "NETWORK",
+          "accessComplexity" : "MEDIUM",
+          "authentication" : "NONE",
+          "confidentialityImpact" : "COMPLETE",
+          "integrityImpact" : "COMPLETE",
+          "availabilityImpact" : "COMPLETE",
+          "baseScore" : 9.3
+        },
+        "severity" : "HIGH",
+        "exploitabilityScore" : 8.6,
+        "impactScore" : 10.0,
+        "obtainAllPrivilege" : false,
+        "obtainUserPrivilege" : false,
+        "obtainOtherPrivilege" : false,
+        "userInteractionRequired" : true
+      }
+    },
+    "publishedDate" : "2010-08-17T20:00Z",
+    "lastModifiedDate" : "2013-02-07T04:26Z"
+  },{
+    "cve" : {
+      "data_type" : "CVE",
+      "data_format" : "MITRE",
+      "data_version" : "4.0",
+      "CVE_data_meta" : {
+        "ID" : "CVE-2010-0127",
+        "ASSIGNER" : "PSIRT-CNA@flexerasoftware.com"
+      },
+      "problemtype" : {
+        "problemtype_data" : [ {
+          "description" : [ {
+            "lang" : "en",
+            "value" : "CWE-787"
+          } ]
+        } ]
+      },
+      "references" : {
+        "reference_data" : [ {
+          "url" : "http://www.adobe.com/support/security/bulletins/apsb10-12.html",
+          "name" : "http://www.adobe.com/support/security/bulletins/apsb10-12.html",
+          "refsource" : "CONFIRM",
+          "tags" : [ "Patch", "Vendor Advisory" ]
+        }, {
+          "url" : "http://secunia.com/advisories/38751",
+          "name" : "38751",
+          "refsource" : "SECUNIA",
+          "tags" : [ "Broken Link" ]
+        }, {
+          "url" : "http://www.vupen.com/english/advisories/2010/1128",
+          "name" : "ADV-2010-1128",
+          "refsource" : "VUPEN",
+          "tags" : [ "Broken Link", "Vendor Advisory" ]
+        }, {
+          "url" : "http://secunia.com/secunia_research/2010-17/",
+          "name" : "http://secunia.com/secunia_research/2010-17/",
+          "refsource" : "MISC",
+          "tags" : [ "Broken Link" ]
+        }, {
+          "url" : "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A7477",
+          "name" : "oval:org.mitre.oval:def:7477",
+          "refsource" : "OVAL",
+          "tags" : [ "Tool Signature" ]
+        }, {
+          "url" : "http://www.securityfocus.com/archive/1/511260/100/0/threaded",
+          "name" : "20100512 Secunia Research: Adobe Shockwave Player 3D Parsing Memory Corruption",
+          "refsource" : "BUGTRAQ",
+          "tags" : [ "Broken Link", "VDB Entry" ]
+        } ]
+      },
+      "description" : {
+        "description_data" : [ {
+          "lang" : "en",
+          "value" : "Adobe Shockwave Player before 11.5.7.609 allows remote attackers to execute arbitrary code or cause a denial of service (memory corruption) via crafted FFFFFF45h Shockwave 3D blocks in a Shockwave file."
+        } ]
+      }
+    },
+    "configurations" : {
+      "CVE_data_version" : "4.0",
+      "nodes" : [ {
+        "operator" : "AND",
+        "children" : [ {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:adobe:shockwave_player:*:*:*:*:*:*:*:*",
+            "versionEndExcluding" : "11.5.7.609",
+            "cpe_name" : [ ]
+          } ]
+        }, {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : false,
+            "cpe23Uri" : "cpe:2.3:o:apple:macos:*:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          }, {
+            "vulnerable" : false,
+            "cpe23Uri" : "cpe:2.3:o:microsoft:windows:*:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
           },
-          "exploitabilityScore": 3.9,
-          "impactScore": 1.4
+            {
+            "vulnerable" : false,
+            "cpe23Uri" : "cpe:2.3:o:bonus:lebonus:*:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+            }
+          ]
+        } ],
+        "cpe_match" : [ ]
+      } ]
+    },
+    "impact" : {
+      "baseMetricV3" : {
+        "cvssV3" : {
+          "version" : "3.1",
+          "vectorString" : "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+          "attackVector" : "NETWORK",
+          "attackComplexity" : "LOW",
+          "privilegesRequired" : "NONE",
+          "userInteraction" : "REQUIRED",
+          "scope" : "UNCHANGED",
+          "confidentialityImpact" : "HIGH",
+          "integrityImpact" : "HIGH",
+          "availabilityImpact" : "HIGH",
+          "baseScore" : 8.8,
+          "baseSeverity" : "HIGH"
         },
-        "baseMetricV2": {
-          "cvssV2": {
-            "version": "2.0",
-            "vectorString": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
-            "accessVector": "NETWORK",
-            "accessComplexity": "LOW",
-            "authentication": "NONE",
-            "confidentialityImpact": "NONE",
-            "integrityImpact": "NONE",
-            "availabilityImpact": "PARTIAL",
-            "baseScore": 5.0
-          },
-          "severity": "MEDIUM",
-          "exploitabilityScore": 10.0,
-          "impactScore": 2.9,
-          "acInsufInfo": false,
-          "obtainAllPrivilege": false,
-          "obtainUserPrivilege": false,
-          "obtainOtherPrivilege": false,
-          "userInteractionRequired": false
-        }
+        "exploitabilityScore" : 2.8,
+        "impactScore" : 5.9
       },
-      "publishedDate": "2020-09-11T19:15Z",
-      "lastModifiedDate": "2020-09-18T01:15Z"
-    }
+      "baseMetricV2" : {
+        "cvssV2" : {
+          "version" : "2.0",
+          "vectorString" : "AV:N/AC:M/Au:N/C:C/I:C/A:C",
+          "accessVector" : "NETWORK",
+          "accessComplexity" : "MEDIUM",
+          "authentication" : "NONE",
+          "confidentialityImpact" : "COMPLETE",
+          "integrityImpact" : "COMPLETE",
+          "availabilityImpact" : "COMPLETE",
+          "baseScore" : 9.3
+        },
+        "severity" : "HIGH",
+        "exploitabilityScore" : 8.6,
+        "impactScore" : 10.0,
+        "obtainAllPrivilege" : false,
+        "obtainUserPrivilege" : false,
+        "obtainOtherPrivilege" : false,
+        "userInteractionRequired" : true
+      }
+    },
+    "publishedDate" : "2010-05-13T17:30Z",
+    "lastModifiedDate" : "2022-04-01T19:35Z"
+  },
+    {
+
+    "cve" : {
+      "data_type" : "CVE",
+      "data_format" : "MITRE",
+      "data_version" : "4.0",
+      "CVE_data_meta" : {
+        "ID" : "CVE-2010-0130",
+        "ASSIGNER" : "PSIRT-CNA@flexerasoftware.com"
+      },
+      "problemtype" : {
+        "problemtype_data" : [ {
+          "description" : [ {
+            "lang" : "en",
+            "value" : "CWE-190"
+          } ]
+        } ]
+      },
+      "references" : {
+        "reference_data" : [ {
+          "url" : "http://www.adobe.com/support/security/bulletins/apsb10-12.html",
+          "name" : "http://www.adobe.com/support/security/bulletins/apsb10-12.html",
+          "refsource" : "CONFIRM",
+          "tags" : [ "Patch", "Vendor Advisory" ]
+        }, {
+          "url" : "http://secunia.com/advisories/38751",
+          "name" : "38751",
+          "refsource" : "SECUNIA",
+          "tags" : [ "Broken Link", "Vendor Advisory" ]
+        }, {
+          "url" : "http://www.vupen.com/english/advisories/2010/1128",
+          "name" : "ADV-2010-1128",
+          "refsource" : "VUPEN",
+          "tags" : [ "Broken Link", "Vendor Advisory" ]
+        }, {
+          "url" : "http://secunia.com/secunia_research/2010-22/",
+          "name" : "http://secunia.com/secunia_research/2010-22/",
+          "refsource" : "MISC",
+          "tags" : [ "Broken Link", "Vendor Advisory" ]
+        }, {
+          "url" : "http://www.securityfocus.com/bid/40084",
+          "name" : "40084",
+          "refsource" : "BID",
+          "tags" : [ "Broken Link", "VDB Entry" ]
+        }, {
+          "url" : "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A7108",
+          "name" : "oval:org.mitre.oval:def:7108",
+          "refsource" : "OVAL",
+          "tags" : [ "Third Party Advisory" ]
+        }, {
+          "url" : "http://www.securityfocus.com/archive/1/511263/100/0/threaded",
+          "name" : "20100512 Secunia Research: Adobe Shockwave Player Integer Overflow Vulnerability",
+          "refsource" : "BUGTRAQ",
+          "tags" : [ "Broken Link", "VDB Entry" ]
+        } ]
+      },
+      "description" : {
+        "description_data" : [ {
+          "lang" : "en",
+          "value" : "Integer overflow in Adobe Shockwave Player before 11.5.7.609 might allow remote attackers to execute arbitrary code via a crafted .dir (aka Director) file."
+        } ]
+      }
+    },
+    "configurations" : {
+      "CVE_data_version" : "4.0",
+      "nodes" : [ {
+        "operator" : "AND",
+        "children" : [ {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : true,
+            "cpe23Uri" : "cpe:2.3:a:adobe:shockwave_player:*:*:*:*:*:*:*:*",
+            "versionEndExcluding" : "11.5.7.609",
+            "cpe_name" : [ ]
+          } ]
+        }, {
+          "operator" : "OR",
+          "children" : [ ],
+          "cpe_match" : [ {
+            "vulnerable" : false,
+            "cpe23Uri" : "cpe:2.3:o:apple:macos:*:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          }, {
+            "vulnerable" : false,
+            "cpe23Uri" : "cpe:2.3:o:microsoft:windows:*:*:*:*:*:*:*:*",
+            "cpe_name" : [ ]
+          } ]
+        } ],
+        "cpe_match" : [ ]
+      } ]
+    },
+    "impact" : {
+      "baseMetricV3" : {
+        "cvssV3" : {
+          "version" : "3.1",
+          "vectorString" : "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+          "attackVector" : "NETWORK",
+          "attackComplexity" : "LOW",
+          "privilegesRequired" : "NONE",
+          "userInteraction" : "REQUIRED",
+          "scope" : "UNCHANGED",
+          "confidentialityImpact" : "HIGH",
+          "integrityImpact" : "HIGH",
+          "availabilityImpact" : "HIGH",
+          "baseScore" : 8.8,
+          "baseSeverity" : "HIGH"
+        },
+        "exploitabilityScore" : 2.8,
+        "impactScore" : 5.9
+      },
+      "baseMetricV2" : {
+        "cvssV2" : {
+          "version" : "2.0",
+          "vectorString" : "AV:N/AC:M/Au:N/C:C/I:C/A:C",
+          "accessVector" : "NETWORK",
+          "accessComplexity" : "MEDIUM",
+          "authentication" : "NONE",
+          "confidentialityImpact" : "COMPLETE",
+          "integrityImpact" : "COMPLETE",
+          "availabilityImpact" : "COMPLETE",
+          "baseScore" : 9.3
+        },
+        "severity" : "HIGH",
+        "exploitabilityScore" : 8.6,
+        "impactScore" : 10.0,
+        "obtainAllPrivilege" : false,
+        "obtainUserPrivilege" : false,
+        "obtainOtherPrivilege" : false,
+        "userInteractionRequired" : true
+      }
+    },
+    "publishedDate" : "2010-05-13T17:30Z",
+    "lastModifiedDate" : "2022-04-01T19:39Z"
+  }
   ]
 }
 

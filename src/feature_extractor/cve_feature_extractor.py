@@ -41,7 +41,7 @@ class Cve_Feature_Extractor:
 
       # returns the features vectors for all CVEs of a specific year
 
-      global vendor_name
+      global vendor_name, product_name
       to_ignore = ('REJECT', 'DISPUTED', 'Resolved')
       when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
@@ -72,31 +72,39 @@ class Cve_Feature_Extractor:
          # vendor name
          nodes = cve['configurations']['nodes']
          vendor_tab = []
-
+         product_tab = []
 
          for node in nodes:
-            cpe_match = node['cpe_match']
+            children = node['children']
+            cpe_match2 = node['cpe_match']
 
-            for config in cpe_match:
+            for config in children:
+               cpe_match = config['cpe_match']
+               for c in cpe_match:
+                  cpe23Uri = c['cpe23Uri']
+                  if cpe23Uri.split(':')[3] not in vendor_tab:
+                     cpe = cpe23Uri.split(':')[3]
+                     vendor_tab.append(cpe.replace(",", ""))
 
-               cpe23Uri = config['cpe23Uri']
-               if cpe23Uri.split(':')[3] not in vendor_tab:
-                  cpe = cpe23Uri.split(':')[3]
-                  vendor_tab.append(cpe.replace(",",""))
+                  if cpe23Uri.split(':')[4] not in product_tab:
+                     product = cpe23Uri.split(':')[4]
+                     product_tab.append(product.replace(",", ""))
 
-               vendor_name = ":".join(vendor_tab)
+            for config2 in cpe_match2:
 
-         # try:
-         #    cve['configurations']['nodes'][0]
-         #    try:
-         #       vendor_name = cve['configurations']['nodes'][0]['cpe_match'][0]['cpe23Uri'] + "\n"
-         #    except:
-         #       vendor_name = cve['configurations']['nodes'][0]['children'][0]['cpe_match'][0]['cpe23Uri'] + "\n"
-         # except:
-         #    continue
+               cpe23Uri2 = config2['cpe23Uri']
+               if cpe23Uri2.split(':')[3] not in vendor_tab:
+                  cpe2 = cpe23Uri2.split(':')[3]
+                  vendor_tab.append(cpe2.replace(",", ""))
 
-         # print(cve_id)
-         # print(vendor_name)
+               if cpe23Uri2.split(':')[4] not in product_tab:
+                  product2 = cpe23Uri2.split(':')[4]
+                  product_tab.append(product2.replace(",", ""))
+
+
+
+            vendor_name = ":".join(vendor_tab)
+            product_name = ":".join(product_tab)
 
 
          # check if cvss score exists
@@ -138,6 +146,7 @@ class Cve_Feature_Extractor:
 
          cve_dict = {'cve_id': cve_id,
                      'vendor_name': vendor_name,
+                     'product_name': product_name,
                      'cwe_value': cwe_value,
                      'description': clean_summary
                      }
