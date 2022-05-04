@@ -21,7 +21,8 @@ class Cve_Feature_Extractor:
 
       if os.path.exists(consts.csv_url):
          os.remove(consts.csv_url)
-      
+
+
       with open(consts.csv_url, 'a+', encoding="utf8") as csv_file:
          csv_file.write(','.join(consts.features_cols) + "\n")
 

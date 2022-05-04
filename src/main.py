@@ -4,7 +4,7 @@ import json
 # jsonContent = fileObject.read()
 # data = json.loads(jsonContent)
 
-with open('test.json', 'r', encoding="utf8") as jsonfile:
+with open('../data/nvd/nvdcve-1.1-2016.json', 'r', encoding="utf8") as jsonfile:
     cve_list = json.load(jsonfile)
 
 cves = cve_list['CVE_Items']

@@ -17,10 +17,10 @@ from src.matched_nvd_cves.nvd import NvdCve
 
 def main():
 
-    msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
-
-    if "y" in msg or "Y" in msg:
-        download_cves_json()
+    # msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
+    #
+    # if "y" in msg or "Y" in msg:
+    #     download_cves_json()
 
 
 
