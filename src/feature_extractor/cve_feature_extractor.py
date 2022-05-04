@@ -64,6 +64,7 @@ class Cve_Feature_Extractor:
          cve_list = json.load(jsonfile)
 
       cves = cve_list['CVE_Items']
+      cwe_non_present = []
 
       for cve in cves:
 
@@ -121,12 +122,26 @@ class Cve_Feature_Extractor:
          cwe = cve['cve']['problemtype']['problemtype_data'][0]['description']
          if (len(cwe)>0):
             cwe_value = cwe[0]['value']
+            cwe_split = cwe_value.split("-")[1]
          else:
             continue
          
          if cwe_value == "NVD-CWE-noinfo":
             continue
 
+
+         # Primary cluster
+         with open('../../data/arbre.txt') as arbre:
+            datafile = arbre.readlines()
+
+
+
+         cwe_non_present.append(cwe_split)
+
+         for line in datafile:
+            if cwe_split in line:
+               if cwe_split in cwe_non_present:
+                  cwe_non_present.remove(cwe_split)
 
          # summary
          summary = cve['cve']['description']['description_data'][0]['value']
@@ -149,12 +164,14 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'cwe_value': cwe_value,
+                     'primary_cluster': cwe_non_present,
                      'description': clean_summary
                      }
          
          features_vectors.append(Cve_Feature_Vector(cve_dict))
 
       return features_vectors
+
 
 
       

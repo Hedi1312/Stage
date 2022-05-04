@@ -82,5 +82,7 @@ def occurrences():
         for line in ls:
             file.write(line)
 
+
+
 if __name__ == "__main__":
     main()

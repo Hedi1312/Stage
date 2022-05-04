@@ -4,10 +4,11 @@ import json
 # jsonContent = fileObject.read()
 # data = json.loads(jsonContent)
 
-with open('../data/nvd/nvdcve-1.1-2016.json', 'r', encoding="utf8") as jsonfile:
+with open('test.json', 'r', encoding="utf8") as jsonfile:
     cve_list = json.load(jsonfile)
 
 cves = cve_list['CVE_Items']
+cwe_non_present = []
 
 for cve in cves:
     id = cve['cve']['CVE_data_meta']['ID']
@@ -19,39 +20,29 @@ for cve in cves:
     product_tab = []
 
 
-    for node in nodes:
-        children = node['children']
-        cpe_match2 = node['cpe_match']
+    # cwe value
+    cwe = cve['cve']['problemtype']['problemtype_data'][0]['description']
+    if (len(cwe) > 0):
+        cwe_value = cwe[0]['value']
+        cwe_split = str(cwe_value.split("-")[1])
+    else:
+        continue
 
-        for config2 in cpe_match2:
+    if cwe_value == "NVD-CWE-noinfo":
+        continue
 
-            cpe23Uri2 = config2['cpe23Uri']
-            if cpe23Uri2.split(':')[3] not in vendor_tab:
-                cpe2 = cpe23Uri2.split(':')[3]
-                vendor_tab.append(cpe2.replace(",", ""))
+    # Primary cluster
 
-            if cpe23Uri2.split(':')[4] not in product_tab:
-                product2 = cpe23Uri2.split(':')[4]
-                product_tab.append(product2.replace(",", ""))
+    with open('../data/arbre.txt') as arbre:
+        datafile = arbre.readlines()
 
+    print(cwe_value + '\t' + cwe_split)
+    cwe_non_present.append(cwe_split)
 
-        for config in children:
-            cpe_match = config['cpe_match']
-            for c in cpe_match:
-                cpe23Uri = c['cpe23Uri']
-                if cpe23Uri.split(':')[3] not in vendor_tab:
-                    cpe = cpe23Uri.split(':')[3]
-                    vendor_tab.append(cpe.replace(",", ""))
+    for line in datafile:
+        if cwe_split in line:
+            n = line
+            cwe_non_present.remove(cwe_split)
 
-                if cpe23Uri.split(':')[4] not in product_tab:
-                    product = cpe23Uri.split(':')[4]
-                    product_tab.append(product.replace(",", ""))
-
-
-        vendor_name = ":".join(vendor_tab)
-        product_name = ":".join(product_tab)
-
-        print(id+'\t'+vendor_name+'\t'+product_name)
-
-
-
+print(cwe_non_present)
+print(n)
