@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import sys
 import os
+import re
 import nltk
 from gensim.parsing.preprocessing import remove_stopwords, STOPWORDS
 import consts
@@ -42,7 +43,7 @@ class Cve_Feature_Extractor:
 
       # returns the features vectors for all CVEs of a specific year
 
-      global vendor_name, product_name
+      global cluster
       to_ignore = ('REJECT', 'DISPUTED', 'Resolved')
       when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
@@ -103,8 +104,6 @@ class Cve_Feature_Extractor:
                   product2 = cpe23Uri2.split(':')[4]
                   product_tab.append(product2.replace(",", ""))
 
-
-
             vendor_name = ":".join(vendor_tab)
             product_name = ":".join(product_tab)
 
@@ -122,7 +121,7 @@ class Cve_Feature_Extractor:
          cwe = cve['cve']['problemtype']['problemtype_data'][0]['description']
          if (len(cwe)>0):
             cwe_value = cwe[0]['value']
-            cwe_split = cwe_value.split("-")[1]
+            cwe_value_split = cwe_value.split("-")[1]
          else:
             continue
          
@@ -130,18 +129,42 @@ class Cve_Feature_Extractor:
             continue
 
 
-         # Primary cluster
+         # Cluster
          with open('../../data/arbre.txt') as arbre:
             datafile = arbre.readlines()
 
 
+         cwe_non_present.append(cwe_value_split)
 
-         cwe_non_present.append(cwe_split)
-
+         clusters = []
+         clusters_final = []
+         cwe_double = []
          for line in datafile:
-            if cwe_split in line:
-               if cwe_split in cwe_non_present:
-                  cwe_non_present.remove(cwe_split)
+            if '(' + cwe_value_split + ')' in line:
+               if cwe_value_split in cwe_non_present:
+                  cwe_non_present.remove(cwe_value_split)
+               l = line
+
+               n = cwe_value_split
+
+               if "Primary Cluster" in l:
+                  cluster = n + '-' + n + '-' + n
+               else:
+                  m = self.find_primary_cluster(l)
+
+               if "Secondary Cluster" in l:
+                  cluster = n + '-' + m + '-' + n
+
+               else:
+                  x = self.find_secondary_cluster(l)
+                  cluster = n + '-' + x + '-' + m
+
+               if cve_id + ':' + cluster not in clusters:
+                  clusters.append(cve_id + ':' + cluster)
+                  clusters_final.append(cluster)
+               else:
+                  cwe_double.append(cve_id + ':' + cluster)
+
 
          # summary
          summary = cve['cve']['description']['description_data'][0]['value']
@@ -164,7 +187,7 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'cwe_value': cwe_value,
-                     'primary_cluster': cwe_non_present,
+                     'cluster': clusters_final,
                      'description': clean_summary
                      }
          
@@ -173,8 +196,84 @@ class Cve_Feature_Extractor:
       return features_vectors
 
 
+   def find_primary_cluster(self, l):
+      global primary_cluster
 
-      
+      with open('../../data/arbre.txt') as arbre:
+         datafile = arbre.readlines()
+         arbre.close()
+
+         primary = []
+         good_primary_cluster = []
+
+         for i, line in enumerate(datafile, 1):
+            if l in line:
+               num_line_l = i
+
+            if "Primary Cluster" in line:
+               primary.append(str(i) + line)
+
+         for p in primary:
+            num_line_m = p.split("-")[0]
+
+            if int(num_line_m) < num_line_l:
+               good_primary_cluster.append(p)
+
+         primary_cluster = str(good_primary_cluster[-1])
+         primary_cluster = re.findall(r"\(\s*\+?(-?\d+)\s*\)", primary_cluster)
+         primary_cluster = str(primary_cluster)
+         primary_cluster = primary_cluster.split("'")[1]
+
+         return primary_cluster
+
+   def find_secondary_cluster(self, l):
+      global secondary_cluster
+
+      good_secondary_cluster = []
+      m = self.find_primary_cluster(l)
+      m = str('(' + m + ')')
+
+      n = re.findall(r"\(\s*\+?(-?\d+)\s*\)", l)
+      n = str(n)
+      n = n.split("'")[1]
+      n = str('(' + n + ')')
+
+      with open('../../data/arbre.txt') as arbre:
+         secondary_cluster = str(0)
+         datafile = arbre.readlines()
+         arbre.close()
+
+         secondarys = []
+
+         for i, line in enumerate(datafile, 1):
+            if n in line:
+               num_line_n = int(i)
+
+            if m in line:
+               num_line_m = int(i)
+
+            if "Secondary Cluster" in line:
+               secondarys.append(str(i) + line)
+
+         for s in secondarys:
+            num_line_x = s.split('-')[0]
+            num_line_x = int(num_line_x)
+
+            if num_line_x > num_line_m and num_line_x < num_line_n:
+               good_secondary_cluster.append(s)
+
+         if len(good_secondary_cluster) == 0:
+            return "Absent"
+
+         else:
+            secondary_cluster = str(good_secondary_cluster[-1])
+            secondary_cluster = re.findall(r"\(\s*\+?(-?\d+)\s*\)", secondary_cluster)
+            secondary_cluster = str(secondary_cluster)
+            secondary_cluster = secondary_cluster.split("'")[1]
+
+            return secondary_cluster
+
+
    def get_clean_summary(self, summary):
       # to lower
       summary = summary.lower()

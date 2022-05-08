@@ -17,12 +17,12 @@ from src.matched_nvd_cves.nvd import NvdCve
 
 def main():
 
-    # msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
-    #
-    # if "y" in msg or "Y" in msg:
-    #     download_cves_json()
+    msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
 
+    if "y" in msg or "Y" in msg:
+        download_cves_json()
 
+    print("En cours d'éxécution ...")
 
     # extract vector features from json files and write them into a csv file
     CveFeatureExtractor = Cve_Feature_Extractor()
@@ -34,6 +34,7 @@ def main():
     print(df_feature_vectors.iloc[randrange(85000)])
 
     occurrences()
+
 
 def download_cves_json():
     nvd_cve_downloader = NvdCve()
@@ -81,7 +82,6 @@ def occurrences():
     with open(nbrOccurence, 'w') as file:
         for line in ls:
             file.write(line)
-
 
 
 if __name__ == "__main__":
