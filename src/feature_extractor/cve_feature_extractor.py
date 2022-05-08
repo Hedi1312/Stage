@@ -226,6 +226,7 @@ class Cve_Feature_Extractor:
 
          return primary_cluster
 
+
    def find_secondary_cluster(self, l):
       global secondary_cluster
 
