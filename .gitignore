@@ -4,9 +4,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 *nvdcve-1.1-20*
+*nombres_occurences.csv*
+*cve_feature_vectors.csv*
 venv/
-/src/feature_extractor/cve_feature_vectors.csv
-/src/feature_extractor/nombres_occurences.csv
+
 
 # C extensions
 *.so
