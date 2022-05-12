@@ -54,18 +54,24 @@ def occurrences():
             except:
                 continue
 
+
     # ouverture en écriture (w, première lettre de write) d'un fichier
     with open(nbrOccurence, 'w', newline='') as fichier:
+        with open('../../data/arbre.txt') as arbre:
+            arbre = arbre.read()
 
-        # on déclare un objet writer
-        ecrivain = csv.writer(fichier)
+            # on déclare un objet writer
+            ecrivain = csv.writer(fichier)
 
-        # écrire une ligne dans le fichier:
-        ecrivain.writerow(['cwe_value', 'occurences'])
+            # écrire une ligne dans le fichier:
+            ecrivain.writerow(['cwe_value', 'occurences', 'presence_arbre'])
 
-        # quelques lignes:
-        for d in data:
-            ecrivain.writerow([d, str(data.count(d))])
+            # quelques lignes:
+            for d in data:
+                if d.split("-")[1] in arbre:
+                    ecrivain.writerow([d, str(data.count(d)),"yes"])
+                else:
+                    ecrivain.writerow([d, str(data.count(d)),"no"])
 
     # défini une liste vide pour stocker les lignes uniques
     ls = []
