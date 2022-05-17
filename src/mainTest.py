@@ -1,16 +1,12 @@
 import json
 import re
-# fileObject = open("test2.json", "r")
-# jsonContent = fileObject.read()
-# data = json.loads(jsonContent)
 
 def main():
-
-    global cluster
+    global cluster, prim_cluster, sec_cluster
     to_ignore = ('REJECT', 'DISPUTED', 'Resolved')
     when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
-    with open('..//data/nvd/nvdcve-1.1-2022.json', 'r', encoding="utf8") as jsonfile:
+    with open('..//data/nvd/nvdcve-1.1-2010.json', 'r', encoding="utf8") as jsonfile:
         cve_list = json.load(jsonfile)
     jsonfile.close()
 
@@ -38,7 +34,7 @@ def main():
         else:
             continue
 
-        if cwe_value == "NVD-CWE-noinfo":
+        if cwe_value == "NVD-CWE-noinfo" or cwe_value == "NVD-CWE-Other" or cwe_value == "CWE-254" or cwe_value =="CWE-199" or cwe_value =="CWE-216" or cwe_value =="CWE-1278":
             continue
 
         summary = cve['cve']['description']['description_data'][0]['value']
@@ -60,39 +56,66 @@ def main():
             datafile = arbre.readlines()
         arbre.close()
 
+        with open('../data/liste_not_in_arbre.csv') as not_in_arbre:
+            datafile_not_in_arbre = not_in_arbre.readlines()
+        not_in_arbre.close()
+
         cwe_non_present.append(cwe_value_split)
 
+        clusters = []
+        clusters_final = []
+        prim_clusters = []
+        sec_clusters = []
+        cwe_double = []
 
         for line in datafile:
-            if '('+cwe_value_split+')' in line:
+            if '(' + cwe_value_split + ')' in line:
                 if cwe_value_split in cwe_non_present:
                     cwe_non_present.remove(cwe_value_split)
-                l = line
 
                 n = cwe_value_split
 
-                if "Primary Cluster" in l:
+                if "Primary Cluster" in line:
                     cluster = n + '-' + n + '-' + n
+                    prim_cluster = n
+                    sec_cluster = 0
                 else:
-                    m = find_primary_cluster(l)
+                    m = find_primary_cluster(line)
 
-                if "Secondary Cluster" in l:
+                if "Secondary Cluster" in line:
                     cluster = n + '-' + m + '-' + n
+                    prim_cluster = m
+                    sec_cluster = n
 
                 else:
-                    x = find_secondary_cluster(l)
+                    x = find_secondary_cluster(line)
                     cluster = n + '-' + x + '-' + m
+                    prim_cluster = m
+                    sec_cluster = x
 
-                if cve_id+':'+cluster not in clusters:
-                    clusters.append(cve_id+':'+cluster)
+                if cve_id + ':' + cluster not in clusters:
+                    clusters.append(cve_id + ':' + cluster)
+                    prim_clusters.append(prim_cluster)
+                    sec_clusters.append(sec_cluster)
                     clusters_final.append(cluster)
-                else:
-                    if cwe_value_split not in cwe_double:
-                        cwe_double.append(cwe_value_split)
-                    else:
-                        continue
 
-    print(cwe_non_present)
+                else:
+                    cwe_double.append(cve_id + ':' + cluster)
+
+            else:
+                for l in datafile_not_in_arbre:
+                    if "CWE-"+cwe_value_split == l.split(",")[0]:
+                        prim_cluster = l.split(",")[1].split("-")[1]
+                        sec_cluster = l.split(",")[2].split("-")[1]
+                        cluster = cwe_value_split + "-" + sec_cluster.rstrip() + "-" + prim_cluster
+
+                        if cve_id + ':' + cluster not in clusters:
+                            clusters.append(cve_id + ':' + cluster)
+                            clusters_final.append(cluster)
+                        else:
+                            cwe_double.append(cve_id + ':' + cluster)
+
+        print(cve_id, cwe_value_split, clusters_final)
 
 
 def find_primary_cluster(l):

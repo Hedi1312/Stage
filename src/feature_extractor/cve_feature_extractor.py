@@ -23,17 +23,37 @@ class Cve_Feature_Extractor:
       if os.path.exists(consts.csv_url):
          os.remove(consts.csv_url)
 
+      if os.path.exists(consts.csv_url_pc):
+         os.remove(consts.csv_url_pc)
+
+      if os.path.exists(consts.csv_url_sc):
+         os.remove(consts.csv_url_sc)
+
 
       with open(consts.csv_url, 'a+', encoding="utf8") as csv_file:
          csv_file.write(','.join(consts.features_cols) + "\n")
 
+      with open(consts.csv_url_pc, 'a+', encoding="utf8") as csv_file_pc:
+         csv_file_pc.write(','.join(consts.features_cols_pc) + "\n")
+
+      with open(consts.csv_url_sc, 'a+', encoding="utf8") as csv_file_sc:
+         csv_file_sc.write(','.join(consts.features_cols_sc) + "\n")
+
       for year in range(2010, 2023):
-         feature_vectors = self.extract_features(year)
+         feature_vectors, feature_vectors_pc, feature_vectors_sc = self.extract_features(year)
 
          with open(consts.csv_url, 'a+', encoding="utf8") as csv_file:
-            
             for vector in feature_vectors:
                csv_file.write(vector.getCsvLine() + "\n")
+
+         with open(consts.csv_url_pc, 'a+', encoding="utf8") as csv_file_pc:
+            for vector in feature_vectors_pc:
+               csv_file_pc.write(vector.getCsvLine() + "\n")
+
+         with open(consts.csv_url_sc, 'a+', encoding="utf8") as csv_file_sc:
+            for vector in feature_vectors_sc:
+               csv_file_sc.write(vector.getCsvLine() + "\n")
+
 
       return None
 
@@ -43,7 +63,7 @@ class Cve_Feature_Extractor:
 
       # returns the features vectors for all CVEs of a specific year
 
-      global cluster
+      global cluster, prim_cluster, sec_cluster
       to_ignore = ('REJECT', 'DISPUTED', 'Resolved')
       when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
@@ -57,6 +77,8 @@ class Cve_Feature_Extractor:
 
       # feature vectors for cves of the year
       features_vectors = []
+      features_vectors_pc = []
+      features_vectors_sc = []
 
       # import json
       cve_path = consts.path_nvd + consts.json_beginning + str(year) + consts.json_end
@@ -125,45 +147,77 @@ class Cve_Feature_Extractor:
          else:
             continue
          
-         if cwe_value == "NVD-CWE-noinfo":
+         if cwe_value == "NVD-CWE-noinfo" or cwe_value == "NVD-CWE-Other" or cwe_value == "CWE-254" or cwe_value =="CWE-199" or cwe_value =="CWE-216" or cwe_value =="CWE-1278":
             continue
 
 
          # Cluster
          with open('../../data/arbre.txt') as arbre:
             datafile = arbre.readlines()
+         arbre.close()
+
+         with open('../../data/liste_not_in_arbre.csv') as not_in_arbre:
+            datafile_not_in_arbre = not_in_arbre.readlines()
+         not_in_arbre.close()
 
 
          cwe_non_present.append(cwe_value_split)
 
          clusters = []
          clusters_final = []
+         prim_clusters = []
+         sec_clusters = []
          cwe_double = []
+
          for line in datafile:
             if '(' + cwe_value_split + ')' in line:
                if cwe_value_split in cwe_non_present:
                   cwe_non_present.remove(cwe_value_split)
-               l = line
 
                n = cwe_value_split
 
-               if "Primary Cluster" in l:
+               if "Primary Cluster" in line:
                   cluster = n + '-' + n + '-' + n
+                  prim_cluster = n
+                  sec_cluster = 0
                else:
-                  m = self.find_primary_cluster(l)
+                  m = self.find_primary_cluster(line)
 
-               if "Secondary Cluster" in l:
+               if "Secondary Cluster" in line:
                   cluster = n + '-' + m + '-' + n
+                  prim_cluster = m
+                  sec_cluster = n
 
                else:
-                  x = self.find_secondary_cluster(l)
+                  x = self.find_secondary_cluster(line)
                   cluster = n + '-' + x + '-' + m
+                  prim_cluster = m
+                  sec_cluster = x
 
                if cve_id + ':' + cluster not in clusters:
                   clusters.append(cve_id + ':' + cluster)
+                  prim_clusters.append(prim_cluster)
+                  sec_clusters.append(sec_cluster)
                   clusters_final.append(cluster)
+
                else:
                   cwe_double.append(cve_id + ':' + cluster)
+
+            else:
+               for l in datafile_not_in_arbre:
+                  if "CWE-"+cwe_value_split == l.split(",")[0]:
+                     prim_cluster = l.split(",")[1].split("-")[1]
+                     sec_cluster = l.split(",")[2].split("-")[1].split("\n")[0]
+                     cluster = cwe_value_split + "-" + sec_cluster + "-" + prim_cluster
+
+                     if cve_id + ':' + cluster not in clusters:
+                        clusters.append(cve_id + ':' + cluster)
+                        prim_clusters.append(prim_cluster)
+                        sec_clusters.append(sec_cluster)
+                        clusters_final.append(cluster)
+
+                     else:
+                        cwe_double.append(cve_id + ':' + cluster)
 
 
          # summary
@@ -187,13 +241,30 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'cwe_value': cwe_value,
-                     'cluster': clusters_final,
                      'description': clean_summary
                      }
          
          features_vectors.append(Cve_Feature_Vector(cve_dict))
 
-      return features_vectors
+         cve_dict_pc = {'cve_id': cve_id,
+                     'vendor_name': vendor_name,
+                     'product_name': product_name,
+                     'primary_cluster': prim_clusters,
+                     'description': clean_summary
+                     }
+
+         features_vectors_pc.append(Cve_Feature_Vector(cve_dict_pc))
+
+         cve_dict_sc = {'cve_id': cve_id,
+                     'vendor_name': vendor_name,
+                     'product_name': product_name,
+                     'secondary_cluster': sec_clusters,
+                     'description': clean_summary
+                     }
+
+         features_vectors_sc.append(Cve_Feature_Vector(cve_dict_sc))
+
+      return features_vectors, features_vectors_pc, features_vectors_sc
 
 
    def find_primary_cluster(self, l):
