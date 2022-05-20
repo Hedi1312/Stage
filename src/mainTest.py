@@ -1,8 +1,8 @@
 import json
 import re
+import collections
 
 def main():
-    global cluster, prim_cluster, sec_cluster
     to_ignore = ('REJECT', 'DISPUTED', 'Resolved')
     when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
@@ -15,6 +15,8 @@ def main():
     clusters = []
     clusters_final = []
     cwe_double = []
+    liste_word = []
+    te = []
 
     for cve in cves:
         cve_id = cve['cve']['CVE_data_meta']['ID']
@@ -24,7 +26,6 @@ def main():
         vuln_configs = 0
         vendor_tab = []
         product_tab = []
-
 
         # cwe value
         cwe = cve['cve']['problemtype']['problemtype_data'][0]['description']
@@ -39,19 +40,19 @@ def main():
 
         summary = cve['cve']['description']['description_data'][0]['value']
 
-        # if summary.startswith('**'):
-        #     special_message = summary.split('**')[1].strip()
-        #
-        #     if special_message in to_ignore:
-        #         continue
-        #     elif special_message in when_assigned:
-        #         unsupported_when_assigned = 1
-        #
-        # clean_summary = get_clean_summary(summary)
+        if summary.startswith('**'):
+            special_message = summary.split('**')[1].strip()
+
+            if special_message in to_ignore:
+                continue
+            elif special_message in when_assigned:
+                unsupported_when_assigned = 1
+
+        clean_summary = get_clean_summary(summary)
+        liste_word.extend(clean_summary.lower().split(" "))
 
 
         # Primary cluster
-
         with open('../data/arbre.txt') as arbre:
             datafile = arbre.readlines()
         arbre.close()
@@ -115,7 +116,16 @@ def main():
                         else:
                             cwe_double.append(cve_id + ':' + cluster)
 
-        print(cve_id, cwe_value_split, clusters_final)
+    liste_word = collections.Counter(liste_word)
+    liste_word = liste_word.most_common()
+
+    t = []
+    for key, value in liste_word:
+        t.append((value, key))
+
+    for freq, mot in t[:30]:
+        print(mot+" "+str(freq))
+
 
 
 def find_primary_cluster(l):
@@ -200,6 +210,41 @@ def find_secondary_cluster(l):
             secondary_cluster = secondary_cluster.split("'")[1]
 
             return secondary_cluster
+
+import nltk
+import string
+
+from gensim.parsing.preprocessing import remove_stopwords, STOPWORDS
+
+sno = nltk.stem.SnowballStemmer('english')
+stopwords_list = [word for word in STOPWORDS]
+stopwords_list.append("instead")
+
+def get_clean_summary(summary):
+  # to lower
+  summary = summary.lower()
+
+  # remove punctuation
+  summary = summary.translate(str.maketrans('', '', string.punctuation))
+
+  summary_words = summary.split(" ")
+
+  # remove stopwords
+  summary_words = [word for word in summary_words if word not in stopwords_list]
+
+  # stemming
+  clean_summary_set = set()
+
+  for word in summary_words:
+     clean_summary_set.add(sno.stem(word))
+
+  # remove numbers
+  clean_summary_set = set(map(lambda x: str(x), clean_summary_set))
+
+  clean_summary_final = set(word for word in clean_summary_set if not word.isdigit())
+
+  return ' '.join(clean_summary_final)
+
 
 
 

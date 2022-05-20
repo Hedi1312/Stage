@@ -19,7 +19,6 @@ stopwords_list.append("instead")
 class Cve_Feature_Extractor:
 
    def feature_vectors_to_csv(self):
-
       if os.path.exists(consts.csv_url):
          os.remove(consts.csv_url)
 
@@ -28,7 +27,6 @@ class Cve_Feature_Extractor:
 
       if os.path.exists(consts.csv_url_sc):
          os.remove(consts.csv_url_sc)
-
 
       with open(consts.csv_url, 'a+', encoding="utf8") as csv_file:
          csv_file.write(','.join(consts.features_cols) + "\n")
@@ -54,24 +52,28 @@ class Cve_Feature_Extractor:
             for vector in feature_vectors_sc:
                csv_file_sc.write(vector.getCsvLine() + "\n")
 
-
       return None
 
 
-
    def extract_features(self, year):
+      with open('../../data/word_more_frequent.csv') as word_more_frequent:
+         datafile_word_more_frequent = word_more_frequent.readlines()
+      word_more_frequent.close()
+
+      word_more_frequent = []
+
+      for i in datafile_word_more_frequent:
+         word_more_frequent.append(i.rstrip())
 
       # returns the features vectors for all CVEs of a specific year
-
-      global cluster, prim_cluster, sec_cluster
       to_ignore = ('REJECT', 'DISPUTED', 'Resolved')
       when_assigned = ('UNSUPPORTED WHEN ASSIGNED', 'PRODUCT NOT SUPPORTED WHEN ASSIGNED', 'VERSION NOT SUPPORTED WHEN ASSIGNED')
 
       # list of exploited CVEs
       with open(consts.exploited_cves_path, 'r', encoding="utf8") as jsonfile:
          exploited_cves = json.load(jsonfile)
-      
       exploited_cves_ids = []
+
       for expl in exploited_cves['vulnerabilities']:
          exploited_cves_ids.append(expl['cveID'])
 
@@ -90,7 +92,6 @@ class Cve_Feature_Extractor:
       cwe_non_present = []
 
       for cve in cves:
-
          #cve id
          cve_id = cve['cve']['CVE_data_meta']['ID']
 
@@ -146,10 +147,27 @@ class Cve_Feature_Extractor:
             cwe_value_split = cwe_value.split("-")[1]
          else:
             continue
-         
          if cwe_value == "NVD-CWE-noinfo" or cwe_value == "NVD-CWE-Other" or cwe_value == "CWE-254" or cwe_value =="CWE-199" or cwe_value =="CWE-216" or cwe_value =="CWE-1278":
             continue
 
+         # Description
+         summary = cve['cve']['description']['description_data'][0]['value']
+         if summary.startswith('**'):
+            special_message = summary.split('**')[1].strip()
+            if special_message in to_ignore:
+               continue
+            elif special_message in when_assigned:
+               unsupported_when_assigned = 1
+
+         clean_summary = self.get_clean_summary(summary)
+
+         # One_hot_encoding
+         for w in word_more_frequent:
+            if w in clean_summary:
+               one_hot_encoding = 1
+               break
+            else:
+               one_hot_encoding = 0
 
          # Cluster
          with open('../../data/arbre.txt') as arbre:
@@ -219,29 +237,14 @@ class Cve_Feature_Extractor:
                      else:
                         cwe_double.append(cve_id + ':' + cluster)
 
-
-         # summary
-         summary = cve['cve']['description']['description_data'][0]['value']
-
-
-         if summary.startswith('**'):
-            special_message = summary.split('**')[1].strip()
-
-            if special_message in to_ignore:
-               continue
-            elif special_message in when_assigned:
-               unsupported_when_assigned = 1
-         
-         clean_summary = self.get_clean_summary(summary)
-
-
          # preparing the features vector
 
          cve_dict = {'cve_id': cve_id,
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'cwe_value': cwe_value,
-                     'description': clean_summary
+                     'description': clean_summary,
+                     'one_hot_encoding': one_hot_encoding
                      }
          
          features_vectors.append(Cve_Feature_Vector(cve_dict))
@@ -250,7 +253,8 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'primary_cluster': prim_clusters,
-                     'description': clean_summary
+                     'description': clean_summary,
+                     'one_hot_encoding': one_hot_encoding
                      }
 
          features_vectors_pc.append(Cve_Feature_Vector(cve_dict_pc))
@@ -259,7 +263,8 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'secondary_cluster': sec_clusters,
-                     'description': clean_summary
+                     'description': clean_summary,
+                     'one_hot_encoding':one_hot_encoding
                      }
 
          features_vectors_sc.append(Cve_Feature_Vector(cve_dict_sc))

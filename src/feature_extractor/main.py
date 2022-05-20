@@ -5,7 +5,6 @@ import os
 import sys
 import consts
 import csv
-import time
 
 
 filename = r'cve_feature_vectors.csv'
@@ -18,7 +17,6 @@ sys.path.insert(1, p)
 from src.matched_nvd_cves.nvd import NvdCve
 
 def main():
-    start = time.time()
     msg = input("Souhaitez-vous télécharger les CVE des 13 dernières années ? Y/N\n")
 
     if "y" in msg or "Y" in msg:
@@ -36,10 +34,6 @@ def main():
     print(df_feature_vectors.iloc[randrange(85000)])
 
     occurrences()
-
-    end = time.time()
-
-    print(end - start)
 
 def download_cves_json():
     nvd_cve_downloader = NvdCve()
@@ -93,19 +87,6 @@ def occurrences():
     with open(nbrOccurence, 'w') as file:
         for line in ls:
             file.write(line)
-
-
-# def trie():
-#     with open('../../data/liste_not_in_arbre.csv') as not_in_arbre:
-#         datafile_not_in_arbre = not_in_arbre.readlines()
-#     not_in_arbre.close()
-#
-#     with open(filename) as vectorcsv:
-#         datafile = vectorcsv.readlines()
-#     vectorcsv.close()
-#
-#     for line in datafile:
-
 
 
 if __name__ == "__main__":
