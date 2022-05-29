@@ -68,6 +68,7 @@ def main():
         prim_clusters = []
         sec_clusters = []
         cwe_double = []
+        tui = []
 
         for line in datafile:
             if '(' + cwe_value_split + ')' in line:
@@ -113,18 +114,23 @@ def main():
                         if cve_id + ':' + cluster not in clusters:
                             clusters.append(cve_id + ':' + cluster)
                             clusters_final.append(cluster)
+                            clusters_final = ",".join(clusters_final)
+
                         else:
                             cwe_double.append(cve_id + ':' + cluster)
 
-    liste_word = collections.Counter(liste_word)
-    liste_word = liste_word.most_common()
+            print(clusters_final)
 
-    t = []
-    for key, value in liste_word:
-        t.append((value, key))
 
-    for freq, mot in t[:30]:
-        print(mot+" "+str(freq))
+    # liste_word = collections.Counter(liste_word)
+    # liste_word = liste_word.most_common()
+    #
+    # t = []
+    # for key, value in liste_word:
+    #     t.append((value, key))
+    #
+    # for freq, mot in t[:30]:
+    #     print(mot+" "+str(freq))
 
 
 

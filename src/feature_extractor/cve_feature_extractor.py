@@ -110,22 +110,34 @@ class Cve_Feature_Extractor:
                   cpe23Uri = c['cpe23Uri']
                   if cpe23Uri.split(':')[3] not in vendor_tab:
                      cpe = cpe23Uri.split(':')[3]
-                     vendor_tab.append(cpe.replace(",", ""))
+                     cpe = cpe.replace(",", "")
+                     cpe = cpe.replace('\\"',"")
+                     cpe = cpe.replace('“', "")
+                     vendor_tab.append(cpe.replace("\\'", ""))
 
                   if cpe23Uri.split(':')[4] not in product_tab:
                      product = cpe23Uri.split(':')[4]
-                     product_tab.append(product.replace(",", ""))
+                     product = product.replace(",", "")
+                     product = product.replace('\\"',"")
+                     product = product.replace('“', "")
+                     product_tab.append(product.replace("\\'", ""))
 
             for config2 in cpe_match2:
 
                cpe23Uri2 = config2['cpe23Uri']
                if cpe23Uri2.split(':')[3] not in vendor_tab:
                   cpe2 = cpe23Uri2.split(':')[3]
-                  vendor_tab.append(cpe2.replace(",", ""))
+                  cpe2 = cpe2.replace(",", "")
+                  cpe2 = cpe2.replace('\\"',"")
+                  cpe2 = cpe2.replace('“', "")
+                  vendor_tab.append(cpe2.replace("\\'", ""))
 
                if cpe23Uri2.split(':')[4] not in product_tab:
                   product2 = cpe23Uri2.split(':')[4]
-                  product_tab.append(product2.replace(",", ""))
+                  product2 = product2.replace(",", "")
+                  product2 = product2.replace('\\"',"")
+                  product2 = product2.replace('“', "")
+                  product_tab.append(product2.replace("\\'", ""))
 
             vendor_name = ":".join(vendor_tab)
             product_name = ":".join(product_tab)
@@ -160,7 +172,8 @@ class Cve_Feature_Extractor:
                unsupported_when_assigned = 1
 
          clean_summary = self.get_clean_summary(summary)
-
+         clean_summary = clean_summary.replace('“', "")
+         clean_summary = clean_summary.replace('”', "")
          # One_hot_encoding
          for w in word_more_frequent:
             if w in clean_summary:
@@ -215,8 +228,13 @@ class Cve_Feature_Extractor:
                if cve_id + ':' + cluster not in clusters:
                   clusters.append(cve_id + ':' + cluster)
                   prim_clusters.append(prim_cluster)
+                  prim_clusters = ",".join(prim_clusters)
+
                   sec_clusters.append(sec_cluster)
+                  sec_clusters = ",".join(sec_clusters)
+
                   clusters_final.append(cluster)
+                  clusters_final = ",".join(clusters_final)
 
                else:
                   cwe_double.append(cve_id + ':' + cluster)
@@ -231,8 +249,13 @@ class Cve_Feature_Extractor:
                      if cve_id + ':' + cluster not in clusters:
                         clusters.append(cve_id + ':' + cluster)
                         prim_clusters.append(prim_cluster)
+                        prim_clusters = ",".join(prim_clusters)
+
                         sec_clusters.append(sec_cluster)
+                        sec_clusters = ",".join(sec_clusters)
+
                         clusters_final.append(cluster)
+                        clusters_final = ",".join(clusters_final)
 
                      else:
                         cwe_double.append(cve_id + ':' + cluster)
