@@ -95,10 +95,27 @@ class Cve_Feature_Extractor:
          #cve id
          cve_id = cve['cve']['CVE_data_meta']['ID']
 
+         # Label
+         with open('../../data/data.csv') as data:
+            datafiledata = data.readlines()
+         data.close()
+
+         for d in datafiledata:
+            if cve_id in d:
+               if len(d.split(',')[1].rstrip()) == 1:
+                  label = "Iot"
+                  break
+               else:
+                  label = "No_Iot"
+                  break
+            else:
+               label = "no_data"
+
          # vendor name
          nodes = cve['configurations']['nodes']
          vendor_tab = []
          product_tab = []
+
 
          for node in nodes:
             children = node['children']
@@ -123,7 +140,6 @@ class Cve_Feature_Extractor:
                      product_tab.append(product.replace("\\'", ""))
 
             for config2 in cpe_match2:
-
                cpe23Uri2 = config2['cpe23Uri']
                if cpe23Uri2.split(':')[3] not in vendor_tab:
                   cpe2 = cpe23Uri2.split(':')[3]
@@ -175,12 +191,12 @@ class Cve_Feature_Extractor:
          clean_summary = clean_summary.replace('“', "")
          clean_summary = clean_summary.replace('”', "")
          # One_hot_encoding
+         one_hot_encoding =''
          for w in word_more_frequent:
             if w in clean_summary:
-               one_hot_encoding = 1
-               break
+               one_hot_encoding = one_hot_encoding + str(1) + '-'
             else:
-               one_hot_encoding = 0
+               one_hot_encoding = one_hot_encoding + str(0) + '-'
 
          # Cluster
          with open('../../data/arbre.txt') as arbre:
@@ -266,8 +282,8 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'cwe_value': cwe_value,
-                     'description': clean_summary,
-                     'one_hot_encoding': one_hot_encoding
+                     'one_hot_encoding': one_hot_encoding.rstrip('-'),
+                     'label' : label
                      }
          
          features_vectors.append(Cve_Feature_Vector(cve_dict))
@@ -276,8 +292,8 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'primary_cluster': prim_clusters,
-                     'description': clean_summary,
-                     'one_hot_encoding': one_hot_encoding
+                     'one_hot_encoding': one_hot_encoding.rstrip('-'),
+                     'label' : label
                      }
 
          features_vectors_pc.append(Cve_Feature_Vector(cve_dict_pc))
@@ -286,8 +302,8 @@ class Cve_Feature_Extractor:
                      'vendor_name': vendor_name,
                      'product_name': product_name,
                      'secondary_cluster': sec_clusters,
-                     'description': clean_summary,
-                     'one_hot_encoding':one_hot_encoding
+                     'one_hot_encoding': one_hot_encoding.rstrip('-'),
+                     'label' : label
                      }
 
          features_vectors_sc.append(Cve_Feature_Vector(cve_dict_sc))
