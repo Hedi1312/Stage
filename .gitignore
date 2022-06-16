@@ -6,7 +6,13 @@ __pycache__/
 *nvdcve-1.1-20*
 *nombres_occurences.csv*
 *cve_feature_vectors.csv*
+<<<<<<< HEAD
 
+=======
+*cve_feature_vectors_pc.csv*
+*cve_feature_vectors_sc.csv*
+venv/
+>>>>>>> word_embedding
 
 # C extensions
 *.so
