@@ -21,27 +21,61 @@
 # print(b.rstrip('-'))
 # print(len(b))
 
-cves = ["CVE-2013-3582", "CVE-2010-1000", "CVE-2010-0104"]
+# import os
+#
+# with open('../data/data.csv') as file:
+#     datafile= file.readlines()
+# file.close()
+#
+# if os.path.exists("../data/data_2010_2019.csv"):
+#     os.remove("../data/data_2010_2019.csv")
+#
+# fichier = open("../data/data_2010_2019.csv", 'a')
+#
+# for d in datafile:
+#     if len(d.split(',')[1].rstrip()) == 1:
+#         label = "Iot"
+#
+#     else:
+#         label = "No_Iot"
+#
+#     fichier.write(d.split(',')[0]+","+label+"\n")
 
-for c in cves:
+# with open('../data/nvd/nvdcve-1.1-2010.json') as file:
+#     datafile= file.readlines()
+# file.close()
+import json
+with open('../data/nvd/nvdcve-1.1-2010.json', 'r', encoding="utf8") as jsonfile:
+    cve_list = json.load(jsonfile)
 
-    id = c
+cves = cve_list['CVE_Items']
 
-    with open('../data/data.csv') as file:
-        datafile= file.readlines()
-    file.close()
 
-    for d in datafile:
+for cve in cves:
+    cve_id = cve['cve']['CVE_data_meta']['ID']
+    cve_id = str(cve_id)
+    nodes = cve['configurations']['nodes']
+    label_tab = []
 
-        if id in d:
-            if len(d.split(',')[1].rstrip()) == 1:
-                label = d.split(',')[1].rstrip()+'-'+"Iot"
-                break
+    for node in nodes:
+        children = node['children']
+        cpe_match2 = node['cpe_match']
+
+        for config in children:
+            cpe_match = config['cpe_match']
+            for c in cpe_match:
+                cpe23Uri = c['cpe23Uri']
+                if cpe23Uri.split(':')[2] not in label_tab:
+                    label = cpe23Uri.split(':')[2]
+                    label_tab.append(label.replace(",", ""))
+
+
+    if not label_tab:
+        test = cve_id, label_tab, "no_data"
+    else:
+        for io in label_tab:
+            if "h" in io:
+                test = cve_id, label_tab, "iot"
             else:
-                label = d.split(',')[1].rstrip()+'-'+"No_Iot"
-                break
-        else:
-            label = "no_data"
-
-
-    print(label)
+                test = cve_id, label_tab, "non_iot"
+    print(test)

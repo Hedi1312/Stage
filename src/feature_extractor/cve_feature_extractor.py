@@ -95,26 +95,27 @@ class Cve_Feature_Extractor:
          #cve id
          cve_id = cve['cve']['CVE_data_meta']['ID']
 
-         # Label
-         with open('../../data/data.csv') as data:
-            datafiledata = data.readlines()
-         data.close()
-
-         for d in datafiledata:
-            if cve_id in d:
-               if len(d.split(',')[1].rstrip()) == 1:
-                  label = "Iot"
-                  break
-               else:
-                  label = "No_Iot"
-                  break
-            else:
-               label = "no_data"
+         # # Label
+         # with open('../../data/data.csv') as data:
+         #    datafiledata = data.readlines()
+         # data.close()
+         #
+         # for d in datafiledata:
+         #    if cve_id in d:
+         #       if len(d.split(',')[1].rstrip()) == 1:
+         #          label = "Iot"
+         #          break
+         #       else:
+         #          label = "No_Iot"
+         #          break
+         #    else:
+         #       label = "no_data"
 
          # vendor name
          nodes = cve['configurations']['nodes']
          vendor_tab = []
          product_tab = []
+         label_tab = []
 
 
          for node in nodes:
@@ -125,6 +126,10 @@ class Cve_Feature_Extractor:
                cpe_match = config['cpe_match']
                for c in cpe_match:
                   cpe23Uri = c['cpe23Uri']
+                  if cpe23Uri.split(':')[2] not in label_tab:
+                     label1 = cpe23Uri.split(':')[2]
+                     label_tab.append(label1.replace(",", ""))
+
                   if cpe23Uri.split(':')[3] not in vendor_tab:
                      cpe = cpe23Uri.split(':')[3]
                      cpe = cpe.replace(",", "")
@@ -141,6 +146,10 @@ class Cve_Feature_Extractor:
 
             for config2 in cpe_match2:
                cpe23Uri2 = config2['cpe23Uri']
+               if cpe23Uri2.split(':')[2] not in label_tab:
+                  label2 = cpe23Uri2.split(':')[2]
+                  label_tab.append(label2.replace(",", ""))
+
                if cpe23Uri2.split(':')[3] not in vendor_tab:
                   cpe2 = cpe23Uri2.split(':')[3]
                   cpe2 = cpe2.replace(",", "")
@@ -157,6 +166,17 @@ class Cve_Feature_Extractor:
 
             vendor_name = ":".join(vendor_tab)
             product_name = ":".join(product_tab)
+
+         # Label
+         if not label_tab:
+            label = "no_data"
+         else:
+            for lab in label_tab:
+               if "h" in lab:
+                  label = "iot"
+               else:
+                  label = "non_iot"
+
 
 
          # check if cvss score exists
